@@ -13,7 +13,7 @@ struct StorageInfo const StorageInfo = {
 #endif
     "UART_EXTERNAL_LOADER",              // Device Name + version number
 	UART_DEV,                           // Device Type
-	0x90000000,                          // Device Start Address
+	0x80000000,                          // Device Start Address
     MEMORY_FLASH_SIZE,                   // Device Size in Bytes
     MEMORY_PAGE_SIZE,                    // Programming Page Size
     0xFF,                                // Initial Content of Erased Memory

@@ -99,12 +99,12 @@ Write(uint32_t Address, uint32_t Size, uint8_t* buffer) {
  * @retval  LOADER_OK = 1       : Operation succeeded
  * @retval  LOADER_FAIL = 0 : Operation failed
  */
-/*
+
 int
 SectorErase(uint32_t EraseStartAddress, uint32_t EraseEndAddress) {
 
     __set_PRIMASK(0); //enable interrupts
-
+    /*
     if (HAL_QSPI_Abort(&hqspi) != HAL_OK) {
         __set_PRIMASK(1); //disable interrupts
         return LOADER_FAIL;
@@ -115,11 +115,17 @@ SectorErase(uint32_t EraseStartAddress, uint32_t EraseEndAddress) {
         __set_PRIMASK(1); //disable interrupts
         return LOADER_FAIL;
     }
+    */
+
+    if (CSP_USART_WriteMemorySectorErase((uint8_t*) NULL, (0 & (0x0fffffff)), 100) != HAL_OK) {
+        __set_PRIMASK(1); //disable interrupts
+        return LOADER_FAIL;
+    }
 
     __set_PRIMASK(1); //disable interrupts
     return LOADER_OK;
 }
-*/
+
 
 /**
  * Description :
@@ -149,11 +155,11 @@ MassErase(void) {
         return LOADER_FAIL;
     }
     */
-    HAL_Delay(1);
-    HAL_Delay(1);
-    HAL_Delay(1);
-    HAL_Delay(1);
-    HAL_Delay(1);
+
+    if (CSP_USART_WriteMemoryMassErase((uint8_t*) NULL, (0 & (0x0fffffff)), 100) != HAL_OK) {
+        __set_PRIMASK(1); //disable interrupts
+        return LOADER_FAIL;
+    }
 
     __set_PRIMASK(1); //disable interrupts
     return LOADER_OK;

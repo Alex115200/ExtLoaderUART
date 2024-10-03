@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 #include "string.h"
+#include "stdio.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -359,23 +360,81 @@ uint8_t testBuffer1[] = "Hello word from Init func!\r\n";
 uint8_t
 CSP_USART_WriteMemoryFromInit(uint8_t* buffer, uint32_t address, uint32_t buffer_size) {
 
-	uint32_t cnt;
-	cnt = 20U;
-	do{
-		/* Transmission of the data */
-		if (HAL_UART_Transmit(&huart2, testBuffer1, strlen(testBuffer1), 100) != HAL_OK) {
-			return HAL_ERROR;
-		}
-		cnt--;
-		HAL_Delay(1);
-	}while(cnt);
+	/* Transmission of the data */
+	if (HAL_UART_Transmit(&huart2, testBuffer1, strlen(testBuffer1), 100) != HAL_OK) {
+		return HAL_ERROR;
+	}
+
+	HAL_Delay(1);
+
 
     return HAL_OK;
 }
 
-uint8_t testBuffer[] = "Hello word from Write func!\r\n";
+uint8_t testBuffer2[] = "Hello word from SectorErase func!\r\n";
+uint8_t
+CSP_USART_WriteMemorySectorErase(uint8_t* buffer, uint32_t address, uint32_t buffer_size) {
+
+	/* Transmission of the data */
+	if (HAL_UART_Transmit(&huart2, testBuffer2, strlen(testBuffer2), 100) != HAL_OK) {
+		return HAL_ERROR;
+	}
+
+	HAL_Delay(1);
+
+
+    return HAL_OK;
+}
+
+
+
+uint8_t testBuffer3[] = "Hello word from MassErase func!\r\n";
+uint8_t
+CSP_USART_WriteMemoryMassErase(uint8_t* buffer, uint32_t address, uint32_t buffer_size) {
+
+	/* Transmission of the data */
+	if (HAL_UART_Transmit(&huart2, testBuffer3, strlen(testBuffer3), 100) != HAL_OK) {
+		return HAL_ERROR;
+	}
+
+	HAL_Delay(1);
+
+
+    return HAL_OK;
+}
+
 uint8_t
 CSP_USART_WriteMemory(uint8_t* buffer, uint32_t address, uint32_t buffer_size) {
+	uint8_t outBuf[64] = {0};
+
+	/***Отладка. Выводим значение адреса RAM, из которого берутся данные ***/
+
+	/*
+	//Буфер для хранения строки символов, представляющих собой число
+	char num_buffer2[20] = {0};
+
+	//Строка для вывода
+	char out_buffer2[50] = "The RAM address is ";
+
+	//Преобразовуем адрес RAM памяти в строку символов
+	uint16_t result2 = snprintf(num_buffer2, 20, "%d", (uint32_t)buffer);
+
+	//Формируем итоговую строку символов
+	strcat(out_buffer2, num_buffer2);
+
+	//Добавляем переход на новую строку
+	strcat(out_buffer2, "\n\r");
+
+
+	//Выводим строку в терминал
+	if (HAL_UART_Transmit(&huart2, out_buffer2, strlen(out_buffer2), 100) != HAL_OK) {
+		return HAL_ERROR;
+	}
+	*/
+
+	//memcpy(outBuf, buffer, buffer_size);
+
+	/*****************************Рабочая часть***************************************/
 
 	for(uint16_t i = 0; i < buffer_size; i++){
 		buffer[i] = buffer[i] + '0';
