@@ -406,6 +406,7 @@ CSP_USART_WriteMemoryMassErase(uint8_t* buffer, uint32_t address, uint32_t buffe
 uint8_t
 CSP_USART_WriteMemory(uint8_t* buffer, uint32_t address, uint32_t buffer_size) {
 	uint8_t outBuf[64] = {0};
+	static uint16_t callCnt = 0;
 
 	/***Отладка. Выводим значение адреса RAM, из которого берутся данные ***/
 
@@ -434,14 +435,29 @@ CSP_USART_WriteMemory(uint8_t* buffer, uint32_t address, uint32_t buffer_size) {
 
 	//memcpy(outBuf, buffer, buffer_size);
 
+
+	callCnt++;
+	char callCntNum[15];
+	uint16_t result = snprintf(callCntNum, 15, "%d", callCnt);
+	strcat(callCntNum, "\n\r");
+	if (HAL_UART_Transmit(&huart2, callCntNum, strlen(callCntNum), 100) != HAL_OK) {
+		return HAL_ERROR;
+	}
+
+
 	/*****************************Рабочая часть***************************************/
 
-	for(uint16_t i = 0; i < buffer_size; i++){
+	for(uint32_t i = 0; i < buffer_size; i++){
 		buffer[i] = buffer[i] + '0';
 	}
 
 	/* Transmission of the data */
-	if (HAL_UART_Transmit(&huart2, buffer, buffer_size, 100) != HAL_OK) {
+	if (HAL_UART_Transmit(&huart2, buffer, buffer_size, 32000U) != HAL_OK) {
+		return HAL_ERROR;
+	}
+
+	//После вывода файла добавим перенос на новую строку
+	if (HAL_UART_Transmit(&huart2, "\n\r", 2, 100) != HAL_OK) {
 		return HAL_ERROR;
 	}
 
